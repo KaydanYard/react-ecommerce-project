@@ -3,8 +3,8 @@ import { LoginView } from '../views/public/login.view';
 import { SignUpView } from '../views/public/signUp.view';
 import { Menu, Icon } from 'semantic-ui-react';
 import { NotFound404 } from '../views/public/NotFound404.view';
-import { CompaniesView } from '../views/public/companies.view';
-import { ConnectedCompaniesView } from '../views/protected/connectedCompanies.view';
+import { StoresView } from '../views/public/store.view';
+import { SavedItemsView } from '../views/protected/shoppingCart.view';
 import { useGlobalContext } from '../contexts/global.context';
 import { ReactNode } from 'react';
 import { useNavigate } from 'react-router';
@@ -33,11 +33,11 @@ export function ProtectedMenu() {
       <Menu>
         <Menu.Menu position='left'>
           <Menu.Item>
-            <Link to="/companies"><Icon name='home'></Icon>Client Connect</Link>
+            <Link to="/stores"><Icon name='shopping cart'></Icon>Shopper Zone</Link>
           </Menu.Item>
 
           <Menu.Item>
-            <Link to="/connected-companies"><Icon name='building'></Icon>Connected Companies</Link>
+            <Link to="/shopping-cart"><Icon name='shopping basket'></Icon>Shopping Cart</Link>
           </Menu.Item>
         </Menu.Menu>
 
@@ -63,7 +63,7 @@ export function PublicMenu() {
       <Menu>
         <Menu.Menu position='left'>
           <Menu.Item>
-            <Link to="/companies"><Icon name='home'></Icon>Client Connect</Link>
+            <Link to="/stores"><Icon name='shop'></Icon>Shopper Zone</Link>
           </Menu.Item>
         </Menu.Menu>
 
@@ -93,20 +93,20 @@ export function MainRoutes() {
         <Route path="/sign-up" element={<SignUpView />} />
         <Route path="/account" element={<ProtectedView><AccountView /></ProtectedView>} />
 
-        <Route path="/connected-companies">
-          <Route path=":id" element={<ProtectedView><ConnectedCompaniesView /></ProtectedView>}></Route>
-          <Route path="" element={<ProtectedView><ConnectedCompaniesView /></ProtectedView>}></Route>
+        <Route path="/shopping-cart">
+          <Route path=":id" element={<ProtectedView><SavedItemsView /></ProtectedView>}></Route>
+          <Route path="" element={<ProtectedView><SavedItemsView /></ProtectedView>}></Route>
         </Route>
 
-        <Route path="/companies">
-          <Route path=":id" element={<CompaniesView />}></Route>
-          <Route path="" element={<CompaniesView />}></Route>
+        <Route path="/stores">
+          <Route path=":id" element={<StoresView />}></Route>
+          <Route path="" element={<StoresView />}></Route>
         </Route>
 
         <Route path="*" element={<NotFound404 />} />
       </Routes>
       <footer>
-        {theme}
+        {/* {theme} */}
       </footer>
     </div >
   )

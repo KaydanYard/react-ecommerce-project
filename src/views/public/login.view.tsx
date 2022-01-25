@@ -17,7 +17,7 @@ export function LoginView() {
       if (redirect) {
         navigate(redirect)
       } else {
-        navigate("/companies")
+        navigate("/stores")
       }
     }
   }, [state.loggedIn])
@@ -32,8 +32,8 @@ export function LoginView() {
   return (
     <Container style={{ width: 400, margin: 48 }}>
       {loading ? <span>Loading...</span> : null}
-      <Login onSuccess={handleSignIn} />
       {state.error && <Message warning>{state.error}</Message>}
+      <Login onSuccess={handleSignIn} />
     </Container>
   );
 }

@@ -2,8 +2,8 @@ import { useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router";
 import { useQuery } from "react-query";
 import { Grid, Menu, Input, Modal, Button, Icon } from "semantic-ui-react";
-import { Company } from "../../components/company"
-import API, { CompanyType } from "../../dataLayer/api"
+import { StoreItem } from "../../components/store"
+import API, { StoreItemType } from "../../dataLayer/api"
 import { useGlobalContext } from "../../contexts/global.context";
 
 type ParamType = { id?: string }
@@ -14,7 +14,7 @@ type LoadersState = {
   fetching?: boolean;
 }
 
-export function CompaniesView() {
+export function StoresView() {
   const { id } = useParams<ParamType>()
   const { state: { loggedIn, user } } = useGlobalContext();
   const [modalOpen, setModalOpen] = useState<boolean>(false)
@@ -22,16 +22,16 @@ export function CompaniesView() {
   const [loaders, setLoaders] = useState<LoadersState>({})
   const navigate = useNavigate()
 
-  const { data: companies } = useQuery(["companies"], async () => {
-    const { data, status } = await API.getCompanies()
+  const { data: Stores } = useQuery(["Stores"], async () => {
+    const { data, status } = await API.getStore()
     return data
   })
 
-  const { data: connectedCompanies, refetch: refetchConnectedCompanies } = useQuery(["connectedCompanies", user?.username], async () => {
+  const { data: connectedStores, refetch: refetchConnectedStores } = useQuery(["connectedStores", user?.username], async () => {
     if (!user?.username) {
       return Promise.resolve([])
     }
-    const { data, status } = await API.getConnectedCompanies(user?.username)
+    const { data, status } = await API.getConnectedStore(user?.username)
     return data || []
   })
 
@@ -40,41 +40,41 @@ export function CompaniesView() {
     setSearch(value);
   }
 
-  // Companies
-  const filteredCompanies = useMemo(() => {
+  // Stores
+  const filteredStores = useMemo(() => {
     if (!search) {
-      return companies;
+      return Stores;
     }
     const searchLowered = search?.toLowerCase();
-    return companies?.filter((company) => JSON.stringify(Object.values(company)).toLowerCase().includes(searchLowered))
-  }, [search, companies])
+    return Stores?.filter((store) => JSON.stringify(Object.values(store)).toLowerCase().includes(searchLowered))
+  }, [search, Stores])
 
-  const company = useMemo(() => {
-    return companies?.find((company) => String(company.id) === id)
-  }, [id, companies])
+  const store = useMemo(() => {
+    return Stores?.find((store) => String(store.id) === id)
+  }, [id, Stores])
 
-  // Company Selector
-  const handleSelectCompany = (companyId: number) => () => {
-    navigate(`/companies/${companyId}`)
+  // store Selector
+  const handleSelectStore = (storeId: number) => () => {
+    navigate(`/Stores/${storeId}`)
   }
 
   // Connect Handler
-  const handleConnect = async (company: CompanyType) => {
+  const handleConnect = async (store: StoreItemType) => {
     if (!loggedIn) {
       setModalOpen(true)
     } else if (user?.username) {
       setLoaders({ connecting: true })
-      await API.connectToCompany(user?.username, company.id);
+      await API.connectToStore(user?.username, store.id);
       setLoaders({ fetching: true })
-      await refetchConnectedCompanies()
+      await refetchConnectedStores()
       setLoaders({})
     }
 
   }
 
-  const handleDisconnect = async (company: CompanyType) => {
+  const handleDisconnect = async (store: StoreItemType) => {
     setLoaders({ connecting: true })
-    await API.disconnectFromCompany(user?.username, company.id);
+    await API.disconnectFromStore(user?.username, store.id);
   }
 
   const closeModal = () => setModalOpen(false)
@@ -90,29 +90,29 @@ export function CompaniesView() {
           <Input size="small" onChange={handleSearch} />
 
           <Menu vertical style={{ opacity: loaders.fetching ? '0.4' : '1' }}>
-            {filteredCompanies?.map((company) => (
+            {filteredStores?.map((store) => (
               <Menu.Item
-                active={String(company.id) === id}
-                key={company.id}
-                onClick={handleSelectCompany(company.id)}
+                active={String(store.id) === id}
+                key={store.id}
+                onClick={handleSelectStore(store.id)}
               >
-                {connectedCompanies?.includes(company.id) && <Icon name="star" />} {company.name}
+                {connectedStores?.includes(store.id) && <Icon name="star" />} {store.name}
               </Menu.Item>)
             )}
           </Menu>
         </Grid.Column>
 
         <Grid.Column width={12}>
-          {company ? (
-            <Company
-              company={company}
-              connected={connectedCompanies?.includes(company.id)}
+          {store ? (
+            <StoreItem
+              item={store}
+              connected={connectedStores?.includes(store.id)}
               onConnect={handleConnect}
               connecting={loaders.connecting}
               onDisconnect={handleDisconnect}
             />
           ) : (
-            <h2>Please Select a Company</h2>
+            <h2>Please Select a store</h2>
           )}
         </Grid.Column>
       </Grid>
@@ -121,11 +121,11 @@ export function CompaniesView() {
           You Must Be Logged In
         </Modal.Header>
         <Modal.Content>
-          Please Log In or Sign Up to Connect to a Company
+          Please Log In or Sign Up to Connect to a store
         </Modal.Content>
         <Modal.Actions>
-          <Button primary onClick={handleNavigate(`/sign-up?redirect=/companies/${id}`)}>Sign Up</Button>
-          <Button primary onClick={handleNavigate(`/login?redirect=/companies/${id}`)}>Log In</Button>
+          <Button primary onClick={handleNavigate(`/sign-up?redirect=/Stores/${id}`)}>Sign Up</Button>
+          <Button primary onClick={handleNavigate(`/login?redirect=/Stores/${id}`)}>Log In</Button>
           <Button secondary onClick={closeModal}>Cancel</Button>
         </Modal.Actions>
       </Modal>

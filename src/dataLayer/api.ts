@@ -14,7 +14,7 @@ export type UserType = {
   username: string;
 }
 
-export type CompanyType = {
+export type StoreItemType = {
   id: number;
   name: string;
   description: string;
@@ -23,72 +23,72 @@ export type CompanyType = {
   phone: string;
 }
 
-function getConnectedCompaniesFromStorage() {
-  const connectedCompaniesJSON = window.localStorage.getItem('connected-companies');
-  let connectedCompanies = {} as any
+function getConnectedStoresFromStorage() {
+  const connectedStoreJSON = window.localStorage.getItem('shopping-cart');
+  let connectedStore = {} as any
 
-  if (connectedCompaniesJSON) {
-    connectedCompanies = JSON.parse(connectedCompaniesJSON)
+  if (connectedStoreJSON) {
+    connectedStore = JSON.parse(connectedStoreJSON)
   }
-  return connectedCompanies
+  return connectedStore
 }
 
 export default class API {
-  static async signUp(formValues: SignUpFormValues): Promise<APIResponse<any>> {
-    return BaseAPI.post('/signup', formValues)
+  static signUp(formValues: SignUpFormValues): Promise<APIResponse<any>> {
+    return BaseAPI.post('/sign-up', formValues)
   }
 
-  static async login(username: string, password: string): Promise<APIResponse<UserType>> {
+  static login(username: string, password: string): Promise<APIResponse<UserType>> {
     return BaseAPI.post('/login', { username, password })
   }
 
-  static getCompanies(): Promise<APIResponse<CompanyType[]>> {
-    return BaseAPI.get("/companies");
+  static getStore(): Promise<APIResponse<StoreItemType[]>> {
+    return BaseAPI.get("/Stores");
   }
 
-  static getConnectedCompanies(userId: string): Promise<APIResponse<number[]>> {
-    let connectedCompanies = getConnectedCompaniesFromStorage()
+  static getConnectedStore(userId: string): Promise<APIResponse<number[]>> {
+    let connectedStore = getConnectedStoresFromStorage()
     return new Promise((resolve) => {
       setTimeout(resolve, 1500, {
-        data: connectedCompanies[userId] || [],
+        data: connectedStore[userId] || [],
         status: 'success'
       })
     })
   }
 
-  static connectToCompany(userId: string, companyId: number): Promise<APIResponse<number[]>> {
-    const connectedCompaniesJSON = window.localStorage.getItem('connected-companies');
-    let connectedCompanies = {} as any
+  static connectToStore(userId: string, storeId: number): Promise<APIResponse<number[]>> {
+    const connectedStoreJSON = window.localStorage.getItem('shopping-cart');
+    let connectedStore = {} as any
 
-    if (connectedCompaniesJSON) {
-      connectedCompanies = JSON.parse(connectedCompaniesJSON)
+    if (connectedStoreJSON) {
+      connectedStore = JSON.parse(connectedStoreJSON)
     }
 
-    connectedCompanies[userId] = connectedCompanies[userId] || [];
-    connectedCompanies[userId].push(companyId);
-    window.localStorage.setItem('connected-companies', JSON.stringify(connectedCompanies))
+    connectedStore[userId] = connectedStore[userId] || [];
+    connectedStore[userId].push(storeId);
+    window.localStorage.setItem('shopping-cart', JSON.stringify(connectedStore))
 
     return new Promise((resolve) => {
       setTimeout(resolve, 1500, {
-        data: connectedCompanies[userId],
+        data: connectedStore[userId],
         status: 'success'
       })
     })
   }
 
-  static disconnectFromCompany(userId?: string, companyId?: number): Promise<APIResponse<number[]>> {
-    if (!userId || !companyId) {
+  static disconnectFromStore(userId?: string, storeId?: number): Promise<APIResponse<number[]>> {
+    if (!userId || !storeId) {
       return Promise.resolve({ status: "error" })
     }
-    let connectedCompanies = getConnectedCompaniesFromStorage()
+    let connectedStore = getConnectedStoresFromStorage()
 
-    connectedCompanies[userId] = connectedCompanies[userId] || [];
-    connectedCompanies[userId].splice(connectedCompanies[userId].indexOf(companyId), 1);
-    window.localStorage.setItem('connected-companies', JSON.stringify(connectedCompanies))
+    connectedStore[userId] = connectedStore[userId] || [];
+    connectedStore[userId].splice(connectedStore[userId].indexOf(storeId), 1);
+    window.localStorage.setItem('shopping-cart', JSON.stringify(connectedStore))
 
     return new Promise((resolve) => {
       setTimeout(resolve, 1500, {
-        data: connectedCompanies[userId],
+        data: connectedStore[userId],
         status: 'success'
       })
     })

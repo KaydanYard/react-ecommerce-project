@@ -20,8 +20,8 @@ export function Login({ onSuccess, onError }: LoginProps) {
   return (
     <Form onSubmit={handleSubmit(onSuccess)}>
       <Form.Field>
-        <label>Username/Email</label>
-        <input {...register('username')} placeholder="username/email" />
+        <label>Username</label>
+        <input {...register('username')} placeholder="username" />
       </Form.Field>
 
       <Form.Field>

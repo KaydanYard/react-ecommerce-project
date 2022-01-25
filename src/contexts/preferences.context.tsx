@@ -21,8 +21,6 @@ type ProviderPreferencesState = {
   onChangeRegion?: (region: string) => void;
 }
 
-
-
 const PreferencesContext = createContext<ProviderPreferencesState>({ state: {} });
 
 export const usePreferencesContext = () => {

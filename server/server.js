@@ -1,12 +1,12 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const companies = require("./companies.json")
+const products = require("./products.json")
 const users = require("./users.json")
 const fs = require('fs')
 var cors = require('cors');
 
 const app = express();
-const port = 8080;
+const port = 8000;
 app.use(cors())
 app.use(bodyParser.json())
 
@@ -16,8 +16,9 @@ function getUsers() {
   return JSON.parse(usersJSON)
 }
 
-const connectedCompanies = {}
+const connectedStores = {}
 
+// Sign Up
 app.post("/sign-up", (req, res) => {
   const users = getUsers()
 
@@ -38,6 +39,7 @@ app.post("/sign-up", (req, res) => {
   });
 });
 
+// Login 
 app.post("/login", (req, res) => {
   const users = getUsers()
 
@@ -47,20 +49,22 @@ app.post("/login", (req, res) => {
 
   res.send({
     data: foundUser,
-    status: !!foundHash ? 'success' : 'error',
-    message: !!foundHash ? '' : 'Could not find user',
+    status: !!foundUser ? 'success' : 'error',
+    message: !!foundUser ? '' : 'Could not find user'
   });
 })
 
-app.get("/companies", (req, res) => {
+// Retrieve Products
+app.get("/store", (req, res) => {
   const users = getUsers()
 
-  res.sent({
-    data: companies,
+  res.send({
+    data: products,
     status: 'success'
   })
 })
 
+// Port
 app.listen(port, () => {
   console.log(`server started at http://localhost:${port}`);
 });

@@ -1,5 +1,5 @@
 export class BaseAPI {
-  static baseURL = "http://localhost:8080"
+  static baseURL = "http://localhost:8000"
   static get(path: string) {
     return fetch(`${BaseAPI.baseURL}${path}`, {
       method: "GET",
