@@ -3,14 +3,13 @@ import { LoginView } from '../views/public/login.view';
 import { SignUpView } from '../views/public/signUp.view';
 import { Menu, Icon } from 'semantic-ui-react';
 import { NotFound404 } from '../views/public/NotFound404.view';
-import { StoresView } from '../views/public/store.view';
+import { CategoryView } from '../views/public/category.view';
 import { SavedItemsView } from '../views/protected/shoppingCart.view';
 import { useGlobalContext } from '../contexts/global.context';
 import { ReactNode } from 'react';
 import { useNavigate } from 'react-router';
 import { usePreferencesContext } from '../contexts/preferences.context';
 import { AccountView } from '../views/protected/account.view';
-
 
 type ProtectedViewProps = {
   children: ReactNode
@@ -33,7 +32,7 @@ export function ProtectedMenu() {
       <Menu>
         <Menu.Menu position='left'>
           <Menu.Item>
-            <Link to="/stores"><Icon name='shopping cart'></Icon>Shopper Zone</Link>
+            <Link to="/shopzone"><Icon name='shopping cart'></Icon>Shopper Zone</Link>
           </Menu.Item>
 
           <Menu.Item>
@@ -48,7 +47,9 @@ export function ProtectedMenu() {
             </Link>
           </Menu.Item>
           <Menu.Item onClick={() => onLogout?.()}>
-            Log Out
+            <Link to="/login">
+              Log Out
+            </Link>
           </Menu.Item>
         </Menu.Menu>
       </Menu>
@@ -63,7 +64,7 @@ export function PublicMenu() {
       <Menu>
         <Menu.Menu position='left'>
           <Menu.Item>
-            <Link to="/stores"><Icon name='shop'></Icon>Shopper Zone</Link>
+            <Link to="/shopzone"><Icon name='shop'></Icon>Shopper Zone</Link>
           </Menu.Item>
         </Menu.Menu>
 
@@ -98,9 +99,10 @@ export function MainRoutes() {
           <Route path="" element={<ProtectedView><SavedItemsView /></ProtectedView>}></Route>
         </Route>
 
-        <Route path="/stores">
-          <Route path=":id" element={<StoresView />}></Route>
-          <Route path="" element={<StoresView />}></Route>
+        <Route path="/shopzone">
+          <Route path=":categoryId" element={<CategoryView />}></Route>
+          <Route path=":categoryId/products/:productId" element={<CategoryView />}></Route>
+          <Route path="" element={<CategoryView />}></Route>
         </Route>
 
         <Route path="*" element={<NotFound404 />} />

@@ -25,32 +25,32 @@ export function SignUpForm({ onSuccess, onError }: SignUpProps) {
     <Form onSubmit={handleSubmit(onSuccess)}>
       <Form.Field>
         <label>Username</label>
-        <input {...register('username')} name="username" placeholder="Username" />
+        <input {...register('username')} name="username" placeholder="username" />
       </Form.Field>
 
       <Form.Field>
         <label>Email</label>
-        <input {...register('email')} name="email" placeholder="Email" />
+        <input {...register('email')} name="email" placeholder="email" />
       </Form.Field>
 
       <Form.Field>
         <label>Firstname</label>
-        <input {...register('firstName')} name="firstName" placeholder="First Name" />
+        <input {...register('firstName')} name="firstName" placeholder="first name" />
       </Form.Field>
 
       <Form.Field>
         <label>Lastname</label>
-        <input {...register('lastName')} name="lastName" placeholder="Last Name" />
+        <input {...register('lastName')} name="lastName" placeholder="last name" />
       </Form.Field>
 
       <Form.Field>
         <label>Password</label>
-        <input {...register('password')} type="password" name="password" placeholder="Password" />
+        <input {...register('password')} type="password" name="password" placeholder="password" />
       </Form.Field>
 
       <Form.Field>
         <label>Confirm Password</label>
-        <input {...register('confirmPassword')} type="password" name="confirmPassword" placeholder="Confirm Password" />
+        <input {...register('confirmPassword')} type="password" name="confirmPassword" placeholder="confirm password" />
       </Form.Field>
 
       <Button type="submit">Sign Up</Button>

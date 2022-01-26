@@ -5,3 +5,11 @@ header {
 header .ui.menu {
   background-color: #333333;
 }
+
+.ui.grid {
+  margin-left: 20px;
+}
+
+.ui.large.input input {
+  padding-right: 80rem
+}

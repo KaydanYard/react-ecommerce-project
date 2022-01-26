@@ -17,7 +17,7 @@ export function LoginView() {
       if (redirect) {
         navigate(redirect)
       } else {
-        navigate("/stores")
+        navigate("/shopzone")
       }
     }
   }, [state.loggedIn])

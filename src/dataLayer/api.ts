@@ -14,8 +14,9 @@ export type UserType = {
   username: string;
 }
 
-export type StoreItemType = {
+export type CategoryType = {
   id: number;
+  items: [];
   name: string;
   description: string;
   email: string;
@@ -23,14 +24,20 @@ export type StoreItemType = {
   phone: string;
 }
 
-function getConnectedStoresFromStorage() {
-  const connectedStoreJSON = window.localStorage.getItem('shopping-cart');
-  let connectedStore = {} as any
+export type ProductType = {
+  id: number;
+  name: string;
+  price: number;
+}
 
-  if (connectedStoreJSON) {
-    connectedStore = JSON.parse(connectedStoreJSON)
+function getConnectedProductsFromStorage() {
+  const connectedProductJSON = window.localStorage.getItem('shopping-cart');
+  let connectedProduct = {} as any
+
+  if (connectedProductJSON) {
+    connectedProduct = JSON.parse(connectedProductJSON)
   }
-  return connectedStore
+  return connectedProduct
 }
 
 export default class API {
@@ -42,55 +49,71 @@ export default class API {
     return BaseAPI.post('/login', { username, password })
   }
 
-  static getStore(): Promise<APIResponse<StoreItemType[]>> {
-    return BaseAPI.get("/Stores");
+  static getCategory(): Promise<APIResponse<CategoryType[]>> {
+    return BaseAPI.get("/shopzone");
   }
 
-  static getConnectedStore(userId: string): Promise<APIResponse<number[]>> {
-    let connectedStore = getConnectedStoresFromStorage()
+  static getProducts(): Promise<APIResponse<ProductType[]>> {
+    return BaseAPI.get("/shopzone");
+  }
+
+  static getConnectedProduct(userId: string): Promise<APIResponse<number[]>> {
+    let connectedProduct = getConnectedProductsFromStorage()
     return new Promise((resolve) => {
       setTimeout(resolve, 1500, {
-        data: connectedStore[userId] || [],
+        data: connectedProduct[userId] || [],
         status: 'success'
       })
     })
   }
 
-  static connectToStore(userId: string, storeId: number): Promise<APIResponse<number[]>> {
-    const connectedStoreJSON = window.localStorage.getItem('shopping-cart');
-    let connectedStore = {} as any
+  static connectToProduct(userId: string, productId: number): Promise<APIResponse<number[]>> {
+    const connectedProductJSON = window.localStorage.getItem('shopping-cart');
+    let connectedProduct = {} as any
 
-    if (connectedStoreJSON) {
-      connectedStore = JSON.parse(connectedStoreJSON)
+    if (connectedProductJSON) {
+      connectedProduct = JSON.parse(connectedProductJSON)
     }
 
-    connectedStore[userId] = connectedStore[userId] || [];
-    connectedStore[userId].push(storeId);
-    window.localStorage.setItem('shopping-cart', JSON.stringify(connectedStore))
+    connectedProduct[userId] = connectedProduct[userId] || [];
+    connectedProduct[userId].push(productId);
+    window.localStorage.setItem('shopping-cart', JSON.stringify(connectedProduct))
 
     return new Promise((resolve) => {
       setTimeout(resolve, 1500, {
-        data: connectedStore[userId],
+        data: connectedProduct[userId],
         status: 'success'
       })
     })
   }
 
-  static disconnectFromStore(userId?: string, storeId?: number): Promise<APIResponse<number[]>> {
-    if (!userId || !storeId) {
+  static disconnectFromProduct(userId?: string, ProductId?: number): Promise<APIResponse<number[]>> {
+    if (!userId || !ProductId) {
       return Promise.resolve({ status: "error" })
     }
-    let connectedStore = getConnectedStoresFromStorage()
+    let connectedProduct = getConnectedProductsFromStorage()
 
-    connectedStore[userId] = connectedStore[userId] || [];
-    connectedStore[userId].splice(connectedStore[userId].indexOf(storeId), 1);
-    window.localStorage.setItem('shopping-cart', JSON.stringify(connectedStore))
+    connectedProduct[userId] = connectedProduct[userId] || [];
+    connectedProduct[userId].splice(connectedProduct[userId].indexOf(ProductId), 1);
+    window.localStorage.setItem('shopping-cart', JSON.stringify(connectedProduct))
 
     return new Promise((resolve) => {
       setTimeout(resolve, 1500, {
-        data: connectedStore[userId],
+        data: connectedProduct[userId],
         status: 'success'
       })
     })
+  }
+
+  static getUsersCart(userId: string) {
+    return BaseAPI.get(`/users/cart/${userId}`)
+  }
+
+  static addToUsersCart(userId: string, productId: number) {
+    return BaseAPI.post(`/users/cart/${userId}/${productId}`)
+  }
+
+  static removeFromUsersCart(userId: string, productId: number) {
+    return BaseAPI.delete(`/users/cart/${userId}/${productId}`)
   }
 }

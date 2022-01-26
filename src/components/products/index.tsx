@@ -1,29 +1,29 @@
 import { Button, Icon } from "semantic-ui-react";
-import { StoreItemType } from "../../dataLayer/api";
+import { ProductType } from "../../dataLayer/api";
 
 type Props = {
-  item: StoreItemType;
-  onConnect: (item: StoreItemType) => void;
-  onDisconnect: (item: StoreItemType) => void;
+  product: ProductType;
+  onConnect?: (product: ProductType) => void;
+  onDisconnect?: (product: ProductType) => void;
   connecting?: boolean;
   connected?: boolean;
 }
 
-export function StoreItem({ item, onConnect, onDisconnect, connecting, connected }: Props) {
+export function Product({ product, onConnect, onDisconnect, connecting, connected }: Props) {
   return (
     <div>
       <div>
-        <h3>{item.name}</h3>
+        <h3>{product.name}</h3>
       </div>
 
       <div>
-        <p>{item.description}</p>
+        <h4>{product.price}</h4>
       </div>
       {connected ?
         <Button
           disabled={connecting}
           secondary
-          onClick={() => onDisconnect?.(item)}
+          onClick={() => onDisconnect?.(product)}
         >
           Remove from Cart {connecting && <Icon loading name="spinner" />}
         </Button>
@@ -31,7 +31,7 @@ export function StoreItem({ item, onConnect, onDisconnect, connecting, connected
         <Button
           disabled={connecting}
           primary
-          onClick={() => onConnect(item)}
+          onClick={() => onConnect?.(product)}
         >
           Add to Cart {connecting && <Icon loading name="spinner" />}
         </Button>

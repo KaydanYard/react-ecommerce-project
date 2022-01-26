@@ -31,7 +31,7 @@ export function GlobalContextProvider({ children }: Props) {
   useEffect(() => {
     const userJSON = window.localStorage.getItem("logged-in-user");
     if (userJSON) {
-      setState({ ...state, user: JSON.parse(userJSON) })
+      setState({ ...state, user: JSON.parse(userJSON), loggedIn: true })
     }
   }, [])
 

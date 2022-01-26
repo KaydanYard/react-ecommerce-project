@@ -1,6 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const products = require("./products.json")
+const categories = require("./categories.json")
 const users = require("./users.json")
 const fs = require('fs')
 var cors = require('cors');
@@ -16,7 +16,10 @@ function getUsers() {
   return JSON.parse(usersJSON)
 }
 
-const connectedStores = {}
+function getUsersCart() {
+  const usersCartJSON = fs.readFileSync('./usersCart.json')
+  return JSON.parse(usersCartJSON)
+}
 
 // Sign Up
 app.post("/sign-up", (req, res) => {
@@ -55,11 +58,52 @@ app.post("/login", (req, res) => {
 })
 
 // Retrieve Products
-app.get("/store", (req, res) => {
+app.get("/shopzone", (req, res) => {
   const users = getUsers()
 
   res.send({
-    data: products,
+    data: categories,
+    status: 'success'
+  })
+})
+
+app.get("/users/cart/:userId", (req, res) => {
+  const usersCart = getUsersCart()
+  const { userId } = req.params
+  const cart = usersCart[userId]
+
+  res.send({
+    data: cart,
+    status: 'success'
+  })
+})
+
+app.post("/users/cart/:userId/:productId", (req, res) => {
+  const usersCart = getUsersCart()
+  const { userId, productId } = req.params
+  const cart = usersCart[userId] || []
+
+  cart.push(+productId);
+  usersCart[userId] = cart;
+  fs.writeFileSync('./usersCart.json', JSON.stringify(usersCart))
+
+  res.send({
+    data: cart,
+    status: 'success'
+  })
+})
+
+app.delete("/users/cart/:userId/:productId", (req, res) => {
+  const usersCart = getUsersCart()
+  const { userId, productId } = req.params
+  const cart = usersCart[userId] || []
+
+  cart.splice(cart.indexOf(productId), 1);
+  usersCart[userId] = cart;
+  fs.writeFileSync('./usersCart.json', JSON.stringify(usersCart))
+
+  res.send({
+    data: cart,
     status: 'success'
   })
 })
