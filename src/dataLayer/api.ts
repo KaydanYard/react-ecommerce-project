@@ -49,7 +49,7 @@ export default class API {
     return BaseAPI.post('/login', { username, password })
   }
 
-  static getCategory(): Promise<APIResponse<CategoryType[]>> {
+  static getCategories(): Promise<APIResponse<CategoryType[]>> {
     return BaseAPI.get("/shopzone");
   }
 
@@ -87,14 +87,14 @@ export default class API {
     })
   }
 
-  static disconnectFromProduct(userId?: string, ProductId?: number): Promise<APIResponse<number[]>> {
-    if (!userId || !ProductId) {
+  static disconnectFromProduct(userId?: string, productId?: number): Promise<APIResponse<number[]>> {
+    if (!userId || !productId) {
       return Promise.resolve({ status: "error" })
     }
     let connectedProduct = getConnectedProductsFromStorage()
 
     connectedProduct[userId] = connectedProduct[userId] || [];
-    connectedProduct[userId].splice(connectedProduct[userId].indexOf(ProductId), 1);
+    connectedProduct[userId].splice(connectedProduct[userId].indexOf(productId), 1);
     window.localStorage.setItem('shopping-cart', JSON.stringify(connectedProduct))
 
     return new Promise((resolve) => {
@@ -109,8 +109,8 @@ export default class API {
     return BaseAPI.get(`/users/cart/${userId}`)
   }
 
-  static addToUsersCart(userId: string, productId: number) {
-    return BaseAPI.post(`/users/cart/${userId}/${productId}`)
+  static addToUsersCart(userId: string, categoryId: number, productId: number) {
+    return BaseAPI.post(`/users/cart/${userId}/${categoryId}/${productId}`)
   }
 
   static removeFromUsersCart(userId: string, productId: number) {

@@ -27,7 +27,7 @@ export function CategoryView() {
   const navigate = useNavigate()
 
   const { data: categories } = useQuery(["shopzone"], async () => {
-    const { data, status } = await API.getCategory()
+    const { data, status } = await API.getCategories()
     return data
   })
 
@@ -44,7 +44,7 @@ export function CategoryView() {
     setSearch(value);
   }
 
-  // categoryies
+  // categories
   const filteredcategories = useMemo(() => {
     if (!search) {
       return categories;
@@ -70,9 +70,9 @@ export function CategoryView() {
   const handleConnect = async (product: ProductType) => {
     if (!loggedIn) {
       setModalOpen(true)
-    } else if (user?.username) {
+    } else if (user?.username && category) {
       setLoaders({ connecting: true })
-      await API.addToUsersCart(user?.username, product.id);
+      await API.addToUsersCart(user?.username, category.id, product.id);
       setLoaders({ fetching: true })
       await refetchUsersCart()
       setLoaders({})
@@ -80,10 +80,10 @@ export function CategoryView() {
   }
 
   const handleDisconnect = async (product: ProductType) => {
-    setLoaders({ connecting: true })
     if (!user?.username) {
       return
     }
+    setLoaders({ connecting: true })
     await API.removeFromUsersCart(user?.username, product.id);
     setLoaders({ fetching: true })
     await refetchUsersCart()
@@ -117,7 +117,7 @@ export function CategoryView() {
           </Menu>
         </Grid.Row>
 
-        <Grid.Row>
+        <Grid.Column width={5}>
           {category ? (
             <Category
               category={category}
@@ -125,14 +125,19 @@ export function CategoryView() {
           ) : (
             <h2>Please Select a category</h2>
           )}
-          {product && (
-            <Product
-              product={product}
-            />
-          )
-          }
-        </Grid.Row>
+        </Grid.Column>
+
+        <Grid.Row>{product && (
+          <Product
+            product={product}
+            onConnect={handleConnect}
+            onDisconnect={handleDisconnect}
+          />
+        )}</Grid.Row>
+
       </Grid>
+
+      {/* Modal */}
       <Modal open={modalOpen} onClose={closeModal}>
         <Modal.Header>
           You Must Be Logged In

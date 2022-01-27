@@ -78,12 +78,12 @@ app.get("/users/cart/:userId", (req, res) => {
   })
 })
 
-app.post("/users/cart/:userId/:productId", (req, res) => {
+app.post("/users/cart/:userId/:categoryId/:productId", (req, res) => {
   const usersCart = getUsersCart()
-  const { userId, productId } = req.params
+  const { userId, categoryId, productId } = req.params
   const cart = usersCart[userId] || []
 
-  cart.push(+productId);
+  cart.push({ categoryId: +categoryId, productId: +productId });
   usersCart[userId] = cart;
   fs.writeFileSync('./usersCart.json', JSON.stringify(usersCart))
 

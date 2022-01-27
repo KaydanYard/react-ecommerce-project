@@ -5,8 +5,8 @@ import API from "../../dataLayer/api"
 
 export function SavedItemsView() {
   const { state: { user } } = useGlobalContext()
-  const { data: products } = useQuery(["shopzone"], async () => {
-    const { data, status } = await API.getProducts()
+  const { data: categories } = useQuery(["shopzone"], async () => {
+    const { data, status } = await API.getCategories()
     return data
   })
 
@@ -19,10 +19,10 @@ export function SavedItemsView() {
   })
 
   const cart = useMemo(() => {
-    return usersCart?.map((productId: number) => {
-      return products?.find(({ id }) => productId === id)
+    return usersCart?.map(({ categoryId, productId }: any) => {
+      return categories?.find(({ id }) => categoryId === id)?.items.find(({ id }) => id === productId)
     })
-  }, [products, usersCart])
+  }, [categories, usersCart])
 
   return (
     <>
