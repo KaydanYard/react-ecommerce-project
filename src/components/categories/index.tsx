@@ -18,7 +18,7 @@ export function Category({ category }: Props) {
 
       <div>
         {category.items.map(({ id, price, name }) => (
-          <Link to={`/shopzone/${category.id}/products/${id}`}><li key={id}>${price} {name}</li></Link>
+          <Link to={`/shopzone/${category.id}/products/${id}`}><li key={id}>{price} {name}</li></Link>
         ))}
       </div>
     </div>

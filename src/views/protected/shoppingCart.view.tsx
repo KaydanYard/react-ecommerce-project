@@ -1,5 +1,6 @@
 import { useMemo } from "react"
 import { useQuery } from "react-query"
+import { Button, Grid, GridColumn } from "semantic-ui-react"
 import { useGlobalContext } from "../../contexts/global.context"
 import API from "../../dataLayer/api"
 
@@ -25,11 +26,20 @@ export function SavedItemsView() {
   }, [categories, usersCart])
 
   return (
-    <>
-      <h2>Shopping Cart</h2>
-      <pre>
-        {JSON.stringify(cart, null, 2)}
-      </pre>
-    </>
+    <Grid>
+      <GridColumn>
+        <h2>Shopping Cart</h2>
+        <pre>
+          {cart.map(
+            ({ id, name, price }: any) => `${id} ${name}\n ${price}\n\n`
+          ).join(' ')}
+        </pre>
+      </GridColumn>
+
+      <GridColumn>
+        <h2>Checkout</h2>
+        <Button>Checkout</Button>
+      </GridColumn>
+    </Grid>
   )
 }
